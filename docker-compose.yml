@@ -1,17 +1,23 @@
 services:
   rate-limiter:
-    build: ./rate-limiter
+    build: .
     container_name: rate-limiter
     ports:
       - "8080:8080"
     environment:
-      - PORT
-      - RT_LIMIT_REQUESTS
-      - RT_LIMIT_TOKENS
-      - RT_TIME_BLOCK
+      - REDIS_ADDR=redis:6379
+      - REDIS_PASSWORD=
+      - REDIS_DB
+      - RATE_LIMIT_IP
+      - RATE_LIMIT_TOKEN
+      - BLOCK_TIME
+      - REFILL_INTERVAL
+      - TOKENS_PER_REFILL
+      - MAX_TOKENS_PER_IP
+      - MAX_TOKENS_PER_TOKEN
 
   redis:
-    image: redis:alpine
+    image: redis:latest
     container_name: redis
     ports:
       - "6379:6379"
