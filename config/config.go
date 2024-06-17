@@ -8,9 +8,9 @@ import (
 )
 
 type Config struct {
-	RedisAddr         string
-	RedisPassword     string
-	RedisDB           int
+	ClientAddr        string
+	ClientPassword    string
+	ClientDB          int
 	RateLimitIP       int
 	RateLimitToken    int
 	BlockTime         int
@@ -22,7 +22,7 @@ type Config struct {
 
 func LoadConfig() (*Config, error) {
 
-	db, err := strconv.Atoi(os.Getenv("REDIS_DB"))
+	db, err := strconv.Atoi(os.Getenv("CLIENT_DB"))
 	if err != nil {
 		return nil, err
 	}
@@ -63,9 +63,9 @@ func LoadConfig() (*Config, error) {
 	}
 
 	return &Config{
-		RedisAddr:         os.Getenv("REDIS_ADDR"),
-		RedisPassword:     os.Getenv("REDIS_PASSWORD"),
-		RedisDB:           db,
+		ClientAddr:        os.Getenv("CLIENT_ADDR"),
+		ClientPassword:    os.Getenv("CLIENT_PASSWORD"),
+		ClientDB:          db,
 		RateLimitIP:       rateLimitIP,
 		RateLimitToken:    rateLimitToken,
 		BlockTime:         blockTime,
@@ -78,8 +78,8 @@ func LoadConfig() (*Config, error) {
 
 func NewRedisClient(config *Config) *redis.Client {
 	return redis.NewClient(&redis.Options{
-		Addr:     config.RedisAddr,
-		Password: config.RedisPassword,
-		DB:       config.RedisDB,
+		Addr:     config.ClientAddr,
+		Password: config.ClientPassword,
+		DB:       config.ClientDB,
 	})
 }
