@@ -31,6 +31,20 @@ Caso violado as regras, o bloqueio da requisição deve acontecer, protegendo as
 
 ### How this code works
 
+##### Change repository
+
+To change Redis to another Database for cache, create another repository with method: <br />
+`Allow(ctx context.Context, key string, limit int, maxTokens int) (bool, error)`
+
+![repository-pattern.png](repository-pattern.png)
+
+##### Exaplain code
+
+- Load Config (config.LoadConfig)
+- Instance Repository (database.NewRedisRepository(cfg))
+- Instance Service (entity.NewRateLimitService)
+- Call Gin Middlaware
+
 Esse projeto tem uma struct que vai ajudara a configurar a quantidade de tokens.
 
     type RateLimiter struct {
