@@ -2,11 +2,10 @@ package main
 
 import (
 	"github.com/tonnytg/desafio-fc-rate-limiter/internal/config"
+	"github.com/tonnytg/desafio-fc-rate-limiter/internal/entity"
 	"github.com/tonnytg/desafio-fc-rate-limiter/internal/infra/database"
 	"github.com/tonnytg/desafio-fc-rate-limiter/pkg/middleware"
 	"log"
-
-	"github.com/tonnytg/desafio-fc-rate-limiter/limiter"
 )
 
 func main() {
@@ -15,13 +14,17 @@ func main() {
 		log.Fatalf("failed to load config: %v", err)
 	}
 
-	//repo := database.NewDatabaseRepository(cfg)
-	//serv := entity.NewClientService(repo)
+	redisRepo := database.NewRedisRepository(cfg)
+	rateLimitService := entity.NewRateLimitService(
+		redisRepo,
+		cfg.RateLimitIP,
+		cfg.RateLimitToken,
+		cfg.RefillInterval,
+		cfg.TokensPerRefill,
+		cfg.MaxTokensPerIP,
+		cfg.MaxTokensPerToken,
+		cfg.BlockTime,
+	)
 
-	// TODO: fazer algo com o service
-
-	clientRepository := database.NewRedisRepository(cfg)
-	rateLimiter := limiter.NewRateLimiter(clientRepository, cfg.RateLimitIP, cfg.RateLimitToken, cfg.RefillInterval, cfg.TokensPerRefill, cfg.MaxTokensPerIP, cfg.MaxTokensPerToken, cfg.BlockTime)
-
-	middleware.StartMiddlware(rateLimiter)
+	middleware.StartMiddlware(rateLimitService)
 }

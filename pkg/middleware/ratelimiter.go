@@ -2,11 +2,11 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/tonnytg/desafio-fc-rate-limiter/limiter"
+	"github.com/tonnytg/desafio-fc-rate-limiter/internal/entity"
 	"net/http"
 )
 
-func RateLimiterMiddleware(rl *limiter.RateLimiter) gin.HandlerFunc {
+func RateLimiterMiddleware(rl *entity.RateLimitService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ip := c.ClientIP()
 		token := c.GetHeader("API_KEY")
@@ -36,7 +36,7 @@ func RateLimiterMiddleware(rl *limiter.RateLimiter) gin.HandlerFunc {
 	}
 }
 
-func StartMiddlware(rateLimiter *limiter.RateLimiter) {
+func StartMiddlware(rateLimiter *entity.RateLimitService) {
 	r := gin.Default()
 	r.Use(RateLimiterMiddleware(rateLimiter))
 
