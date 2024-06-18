@@ -35,3 +35,14 @@ func RateLimiterMiddleware(rl *limiter.RateLimiter) gin.HandlerFunc {
 		c.Next()
 	}
 }
+
+func StartMiddlware(rateLimiter *limiter.RateLimiter) {
+	r := gin.Default()
+	r.Use(RateLimiterMiddleware(rateLimiter))
+
+	r.GET("/", func(c *gin.Context) {
+		c.JSON(200, gin.H{"message": "ok"})
+	})
+
+	r.Run(":8080")
+}

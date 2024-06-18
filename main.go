@@ -1,12 +1,12 @@
 package main
 
 import (
+	"github.com/tonnytg/desafio-fc-rate-limiter/internal/config"
+	"github.com/tonnytg/desafio-fc-rate-limiter/internal/infra/database"
+	"github.com/tonnytg/desafio-fc-rate-limiter/pkg/middleware"
 	"log"
 
-	"github.com/gin-gonic/gin"
-	"github.com/tonnytg/desafio-fc-rate-limiter/config"
 	"github.com/tonnytg/desafio-fc-rate-limiter/limiter"
-	"github.com/tonnytg/desafio-fc-rate-limiter/middleware"
 )
 
 func main() {
@@ -15,15 +15,13 @@ func main() {
 		log.Fatalf("failed to load config: %v", err)
 	}
 
-	client := config.NewRedisClient(cfg)
-	rateLimiter := limiter.NewRateLimiter(client, cfg.RateLimitIP, cfg.RateLimitToken, cfg.RefillInterval, cfg.TokensPerRefill, cfg.MaxTokensPerIP, cfg.MaxTokensPerToken, cfg.BlockTime)
+	//repo := database.NewDatabaseRepository(cfg)
+	//serv := entity.NewClientService(repo)
 
-	r := gin.Default()
-	r.Use(middleware.RateLimiterMiddleware(rateLimiter))
+	// TODO: fazer algo com o service
 
-	r.GET("/", func(c *gin.Context) {
-		c.JSON(200, gin.H{"message": "ok"})
-	})
+	clientRepository := database.NewRedisRepository(cfg)
+	rateLimiter := limiter.NewRateLimiter(clientRepository, cfg.RateLimitIP, cfg.RateLimitToken, cfg.RefillInterval, cfg.TokensPerRefill, cfg.MaxTokensPerIP, cfg.MaxTokensPerToken, cfg.BlockTime)
 
-	r.Run(":8080")
+	middleware.StartMiddlware(rateLimiter)
 }

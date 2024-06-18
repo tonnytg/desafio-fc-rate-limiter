@@ -3,13 +3,14 @@ package limiter
 import (
 	"context"
 	"fmt"
+	"github.com/tonnytg/desafio-fc-rate-limiter/internal/entity"
 	"time"
 
 	"github.com/redis/go-redis/v9"
 )
 
 type RateLimiter struct {
-	client            *redis.Client
+	client            entity.ClientRepositoryInterface
 	rateLimitIP       int
 	rateLimitToken    int
 	blockTime         time.Duration
@@ -19,9 +20,9 @@ type RateLimiter struct {
 	maxTokensPerToken int
 }
 
-func NewRateLimiter(client *redis.Client, rateLimitIP, rateLimitToken, refillInterval, tokensPerRefill, maxTokensPerIP, maxTokensPerToken, blockTime int) *RateLimiter {
+func NewRateLimiter(clientRepository entity.ClientRepositoryInterface, rateLimitIP, rateLimitToken, refillInterval, tokensPerRefill, maxTokensPerIP, maxTokensPerToken, blockTime int) *RateLimiter {
 	return &RateLimiter{
-		client:            client,
+		client:            clientRepository,
 		rateLimitIP:       rateLimitIP,
 		rateLimitToken:    rateLimitToken,
 		refillInterval:    time.Duration(refillInterval) * time.Second,

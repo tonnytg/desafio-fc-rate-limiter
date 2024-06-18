@@ -3,8 +3,6 @@ package config
 import (
 	"os"
 	"strconv"
-
-	"github.com/redis/go-redis/v9"
 )
 
 type Config struct {
@@ -74,12 +72,4 @@ func LoadConfig() (*Config, error) {
 		MaxTokensPerIP:    maxTokensPerIP,
 		MaxTokensPerToken: maxTokensPerToken,
 	}, nil
-}
-
-func NewRedisClient(config *Config) *redis.Client {
-	return redis.NewClient(&redis.Options{
-		Addr:     config.ClientAddr,
-		Password: config.ClientPassword,
-		DB:       config.ClientDB,
-	})
 }
