@@ -15,6 +15,8 @@ type DatabaseRepository struct {
 	database Database
 }
 
+type DatabaseRepositoryInterface interface{}
+
 func NewDatabaseRepository(config *config.Config) *DatabaseRepository {
 
 	rr := DatabaseRepository{
@@ -26,7 +28,7 @@ func NewDatabaseRepository(config *config.Config) *DatabaseRepository {
 	return &rr
 }
 
-func (dr *DatabaseRepository) Save(ctx context.Context, key string, limit int, maxTokens int) (bool, error) {
+func (dr *DatabaseRepository) Allow(ctx context.Context, key string, limit int, maxTokens int) (bool, error) {
 
 	log.Println("DatabaseRepository received:", ctx, key, limit, maxTokens)
 	return true, nil

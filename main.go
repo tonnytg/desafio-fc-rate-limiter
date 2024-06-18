@@ -14,9 +14,10 @@ func main() {
 		log.Fatalf("failed to load config: %v", err)
 	}
 
-	redisRepo := database.NewRedisRepository(cfg)
+	repo := database.NewDatabaseRepository(cfg) // No Limiter Database Cache all request will be allowed
+	//repo := database.NewRedisRepository(cfg) // Has Limiter Database Cache some request will be blocked
 	rateLimitService := entity.NewRateLimitService(
-		redisRepo,
+		repo,
 		cfg.RateLimitIP,
 		cfg.RateLimitToken,
 		cfg.RefillInterval,

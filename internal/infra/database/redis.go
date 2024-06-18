@@ -17,7 +17,6 @@ type RedisRepository struct {
 }
 
 type RedisRepositoryInterface interface {
-	Save(ctx context.Context, key string, limit int, maxTokens int) (bool, error)
 	Allow(ctx context.Context, key string, limit int, maxTokens int) (bool, error) // Este método deve ser exportado
 }
 
@@ -34,17 +33,6 @@ func NewRedisRepository(config *config.Config) *RedisRepository {
 			config: config,
 		},
 	}
-}
-
-func (rr *RedisRepository) Save(ctx context.Context, key string, limit int, maxTokens int) (bool, error) {
-	return rr.Allow(ctx, key, limit, maxTokens)
-}
-
-func (rr *RedisRepository) AllowIP(ctx context.Context, ip string) (bool, error) {
-	return true, nil
-}
-func (rr *RedisRepository) AllowToken(ctx context.Context, token string) (bool, error) {
-	return true, nil
 }
 
 func (rr *RedisRepository) Allow(ctx context.Context, key string, limit int, maxTokens int) (bool, error) {
